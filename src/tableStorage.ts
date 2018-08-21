@@ -2,13 +2,14 @@
  * @module botbuilder-azuretablestorage
  */
 /**
- * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Initial code copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License.
  */
 import { Storage, StoreItems, StoreItem } from "botbuilder";
 import * as azure from "azure-storage";
 import { flatten, unflatten } from "flat";
 import { Host } from "botbuilder-azure";
+
 const EntityGenerator = azure.TableUtilities.entityGenerator;
 
 /** 
@@ -73,20 +74,27 @@ export class TableStorage implements Storage {
         }
 
         this.settings = Object.assign({}, settings);
-        this.tableService = this.createTableService(this.settings.storageAccountOrConnectionString, this.settings.storageAccessKey, this.settings.host)
+        this.tableService = this.createTableService(this.settings.storageAccountOrConnectionString, this.settings.storageAccessKey, this.settings.host);
     }
 
     /** Ensure the table is created. */
     public ensureTable(): Promise<azure.TableService.TableResult> {
-        if (!checkedTables[this.settings.tableName])
-            checkedTables[this.settings.tableName] = this.tableService.createTableIfNotExistsAsync(this.settings.tableName);
+        if (!checkedTables[this.settings.tableName]) {
+            try {
+                checkedTables[this.settings.tableName] = this.tableService.createTableIfNotExistsAsync(this.settings.tableName);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        }
         return checkedTables[this.settings.tableName];
     }
 
     /** Delete backing table (mostly used for unit testing.) */
     public deleteTable(): Promise<boolean> {
-        if (checkedTables[this.settings.tableName])
+        if (checkedTables[this.settings.tableName]) {
             delete checkedTables[this.settings.tableName];
+        }
         return this.tableService.deleteTableIfExistsAsync(this.settings.tableName);
     }
 
@@ -113,7 +121,9 @@ export class TableStorage implements Storage {
             return Promise.all(reads)
                 .then(items => items
                     .filter(prop => prop.value !== null)
-                    .reduce(propsReducer, {}));     // as StoreItems
+                    .reduce(propsReducer, {})
+                ).catch(e => console.log(e));     // as StoreItems
+                    
         });
     };
 
@@ -156,8 +166,8 @@ export class TableStorage implements Storage {
             });
 
             return Promise.all(writes)
-                .then(() => { });            // void
-        });
+                .then(() => { }).catch(err => console.log(err));            // void
+        }).catch(e => console.log(e));
     };
 
     public delete(keys: string[]): Promise<void> {
@@ -178,8 +188,8 @@ export class TableStorage implements Storage {
             });
 
             return Promise.all(deletes)
-                .then(() => { });            // void
-        });
+                .then(() => { }).catch(err => console.log(err));            // void
+        }).catch(e => console.log(e));
     }
 
     private sanitizeKey(key: string): string {
@@ -235,7 +245,6 @@ export class TableStorage implements Storage {
 interface TableServiceAsync extends azure.TableService {
     createTableIfNotExistsAsync(table: string): Promise<azure.TableService.TableResult>;
     deleteTableIfExistsAsync(table: string): Promise<boolean>;
-
     retrieveEntityAsync<T>(table: string, partitionKey: string, rowKey: string, options: any): Promise<T>;
     replaceEntityAsync<T>(table: string, entityDescriptor: T): Promise<azure.TableService.EntityMetadata>;
     insertOrReplaceEntityAsync<T>(table: string, entityDescriptor: T): Promise<azure.TableService.EntityMetadata>;

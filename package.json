@@ -1,6 +1,6 @@
 {
   "name": "botbuilder-azuretablestorage",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Bot Builder SDK Azure Table Storage",
   "keywords": [
     "botbuilder",
@@ -9,7 +9,9 @@
     "azure table storage",
     "table storage"
   ],
-  "author": "Microsoft Corp.",
+  "contributors": [
+    "Microsoft Corp."
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/szul/botbuilder-azuretablestorage/issues"
