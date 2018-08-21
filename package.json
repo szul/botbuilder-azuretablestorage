@@ -1,0 +1,37 @@
+{
+  "name": "botbuilder-azuretablestorage",
+  "version": "0.1.0",
+  "description": "Bot Builder SDK Azure Table Storage",
+  "keywords": [
+    "botbuilder",
+    "bots",
+    "chatbots",
+    "azure table storage",
+    "table storage"
+  ],
+  "author": "Microsoft Corp.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/szul/botbuilder-azuretablestorage/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szul/botbuilder-azuretablestorage.git"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/.bin/tsc -p .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "dependencies": {
+    "azure-storage": "^2.6.0",
+    "botbuilder": "^4.0.0-preview1.2",
+    "botbuilder-azure": "^4.0.0-preview1.2",
+    "flat": "^4.1.0",
+    "typescript": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^7.0.64"
+  }
+}
